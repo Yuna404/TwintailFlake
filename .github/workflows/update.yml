@@ -10,20 +10,34 @@ permissions:
 
 jobs:
   update:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: cachix/install-nix-action@v31
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
-      - name: Update to the last release
+      - name: Check for a new release
+        id: update
         run: |
+          nix run nixpkgs#nix-update -- --flake twintaillauncher --version-regex 'ttl-v(.*)'
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build the new version
+        if: steps.update.outputs.changed == 'true'
+        run: nix build .#twintaillauncher --print-build-logs
+
+      - name: Commit and push
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          version=$(nix eval --raw .#twintaillauncher.version)
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          nix run nixpkgs#nix-update -- --flake twintaillauncher --version-regex 'ttl-v(.*)' --build --commit
-
-      - name: Push
-        run: git push
+          git commit -am "twintaillauncher: update to ${version}"
+          git push

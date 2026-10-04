@@ -1,0 +1,29 @@
+name: Update Twintail Launcher
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Update to the last release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          nix run nixpkgs#nix-update -- --flake twintaillauncher --version-regex 'ttl-v(.*)' --build --commit
+
+      - name: Push
+        run: git push

@@ -26,7 +26,7 @@ inputs.twintail = {
 Then add the package, for example in `home.packages` or `environment.systemPackages`:
 
 ```nix
-inputs.twintail.packages.x86_64-linux.default
+inputs.twintail.packages.${pkgs.stdenv.hostPlatform.system}.default
 ```
 
 An overlay is also available (`overlays.default`) and adds `pkgs.twintaillauncher`.

@@ -45,12 +45,6 @@ If you use the overlay, your `pkgs` needs `allowUnfree = true` because `steam-ru
 - `mangohud` is added to the `PATH` of the wrapper, since the launcher can use it.
 - The wrapper sets `GDK_BACKEND=x11` and `WEBKIT_DISABLE_DMABUF_RENDERER=1` (Wayland and DMABUF rendering caused problems with WebKit on NVIDIA), and adds `libayatana-appindicator` to `LD_LIBRARY_PATH` for the tray icon.
 
-### Why there is a `postPatch`
-
-The Sparkle patch (`apply_patch` in `src-tauri/src/utils/mod.rs`) copies `hkrpg_patch.dll` to `jsproxy.dll` with `fs::copy`, which also copies the permissions of the source file. On Nix the source lives in the read-only store, so the copy ends up read-only too. The next launch then fails to overwrite it and the launcher panics with `PermissionDenied`.
-
-The `postPatch` removes the old `jsproxy.dll` before copying. This is fixed upstream on `master` ([#341](https://github.com/TwintailTeam/TwintailLauncher/pull/341)), so it can be dropped once a release includes the fix.
-
 ## Updating
 
 To move to a new release, change `version` in `package.nix` and replace the three hashes (`src`, `cargoHash` and `pnpmDeps`). Set each one to `lib.fakeHash`, build, and copy the hash printed after `got:` from the error.

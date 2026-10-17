@@ -65,12 +65,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
     libayatana-appindicator
   ];
 
-  postPatch = ''
-    substituteInPlace src-tauri/src/utils/mod.rs \
-      --replace-fail "fs::copy(&patch, &target).unwrap();" \
-                     "let _ = fs::remove_file(&target); fs::copy(&patch, &target).unwrap();"
-  '';
-
   preFixup = ''
     gappsWrapperArgs+=(
       --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [ libayatana-appindicator ]}

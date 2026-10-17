@@ -25,18 +25,18 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "twintaillauncher";
-  version = "2.5.1";
+  version = "2.5.2";
 
   src = fetchFromGitHub {
     owner = "TwintailTeam";
     repo = "TwintailLauncher";
     tag = "ttl-v${finalAttrs.version}";
-    hash = "sha256-A8A8Rn4dSE0ABvFD8VOeo83bgOOhChZPr/rn0tpx2F0=";
+    hash = "sha256-b8z6i0PTL9IagFDH0B+Y0Hpw1PUI5iwMeOcccfg8yLU=";
   };
 
   cargoRoot = "src-tauri";
   buildAndTestSubdir = finalAttrs.cargoRoot;
-  cargoHash = "sha256-Nm9jiHaI5frTBIGKe/gagZuAPkAeci0KP0eycU91anM=";
+  cargoHash = "sha256-EvA3VzB+J8gD+nzf4KCTD2hIvsMOc8JmsVTjsBKazkM=";
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;

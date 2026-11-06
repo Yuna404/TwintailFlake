@@ -21,6 +21,10 @@
   librsvg,
   libayatana-appindicator,
   cacert,
+  makeFontsConf,
+  inter,
+  dejavu_fonts,
+  noto-fonts-cjk-sans,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
@@ -79,13 +83,16 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   postFixup = ''
     mv $out/bin/twintaillauncher $out/bin/.twintaillauncher-real
-    
+
     cat > $out/bin/twintaillauncher <<EOF
     #!/bin/sh
     export PATH="${lib.makeBinPath [ mangohud ]}:\$PATH"
+    export FONTCONFIG_FILE="${makeFontsConf {
+      fontDirectories = [ inter dejavu_fonts noto-fonts-cjk-sans ];
+    }}"
     exec ${steam-run}/bin/steam-run $out/bin/.twintaillauncher-real "\$@"
     EOF
-    
+
     chmod +x $out/bin/twintaillauncher
   '';
 

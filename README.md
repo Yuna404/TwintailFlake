@@ -19,7 +19,6 @@ Add the flake as an input of your flake:
 ```nix
 inputs.twintail = {
   url = "github:Yuna404/TwintailFlake";
-  inputs.nixpkgs.follows = "nixpkgs";
 };
 ```
 

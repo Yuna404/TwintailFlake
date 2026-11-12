@@ -22,9 +22,7 @@ jobs:
       - name: Check for a new release
         id: update
         run: |
-          # Copie le flake dans le store pour que nix-update puisse le lire.
-          nix flake archive
-          nix run nixpkgs#nix-update -- --flake twintaillauncher --version-regex 'ttl-v(.*)'
+          nix run nixpkgs#nix-update -- twintaillauncher --version-regex 'ttl-v(.*)'
           if git diff --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else

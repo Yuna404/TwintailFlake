@@ -22,6 +22,8 @@ inputs.twintail = {
 };
 ```
 
+Important : Do not make Twintail follow your system's nixpkgs input (e.g., inputs.twintail.inputs.nixpkgs.follows = "nixpkgs";), as this may cause build errors due to dependency incompatibilities.
+
 Then add the package, for example in `home.packages` or `environment.systemPackages`:
 
 ```nix
@@ -51,4 +53,3 @@ To move to a new release, change `version` in `package.nix` and replace the thre
 ## Troubleshooting
 
 - **`bwrap: Can't chdir to ...`**: `steam-run` has its own private `/tmp`. Run the launcher from your home directory, not from a directory under `/tmp`.
-- **Build fails on `fetcherVersion`**: your nixpkgs is too old, update it.
